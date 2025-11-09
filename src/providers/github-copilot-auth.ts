@@ -176,6 +176,12 @@ export async function getValidAccessToken(
     throw new Error('No access token available. Please authenticate first.');
   }
 
+  // PAT tokens don't expire, return immediately
+  if (authConfig.type === 'pat') {
+    return authConfig.access_token;
+  }
+
+  // For OAuth tokens, check expiry
   if (!isTokenExpired(authConfig.expires_at)) {
     return authConfig.access_token;
   }
