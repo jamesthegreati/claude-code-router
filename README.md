@@ -27,7 +27,78 @@
 - **GitHub Actions Integration**: Trigger Claude Code tasks in your GitHub workflows.
 - **Plugin System**: Extend functionality with custom transformers.
 
-## 🚀 Getting Started
+## ⚡ Quickstart (One-Liner)
+
+Get Claude Code Router up and running in seconds with GitHub Copilot support!
+
+### Option 1: Quick Install & Run (Recommended)
+
+**macOS / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/jamesthegreati/claude-code-router/github-copilot-provider/scripts/quickstart.sh | bash
+```
+
+**Windows PowerShell:**
+```powershell
+irm https://raw.githubusercontent.com/jamesthegreati/claude-code-router/github-copilot-provider/scripts/quickstart.sh | iex
+```
+
+This script will:
+- ✅ Check for Node.js >= 18 or Bun
+- ✅ Create default config at `~/.claude-code-router/config.json`
+- ✅ Start the router in the background on port 3456
+- ✅ Show you the next steps
+
+### Option 2: Direct npx Execution
+
+Run directly from GitHub without any installation:
+
+```bash
+# Run from the main repository
+npx -y -p github:jamesthegreati/claude-code-router ccr start
+
+# Or run from the GitHub Copilot provider branch
+npx -y -p github:jamesthegreati/claude-code-router#github-copilot-provider ccr start
+```
+
+With Bun (faster):
+```bash
+bunx --bun github:jamesthegreati/claude-code-router ccr start
+```
+
+### Next Steps After Quickstart
+
+1. **Authenticate with GitHub Copilot** (required for GitHub Copilot models):
+   ```bash
+   ccr auth github-copilot
+   ```
+   This will guide you through the OAuth2 device flow to connect your GitHub account.
+
+2. **Select your model**:
+   ```bash
+   ccr model
+   ```
+   Use the interactive CLI to choose from available models (including GitHub Copilot models like `claude-sonnet-4`, `gpt-5`, `o1`, etc.).
+
+3. **Start coding**:
+   ```bash
+   ccr code "Your task here"
+   ```
+
+4. **Optional: Open the Web UI**:
+   ```bash
+   ccr ui
+   ```
+
+### Troubleshooting
+
+- **Node.js version**: Ensure you have Node.js >= 18 installed. Check with `node -v`.
+- **Port conflict**: The default port is 3456. If it's in use, stop the conflicting service or modify the `PORT` in `~/.claude-code-router/config.json`.
+- **GitHub Actions / CI**: Set `"NON_INTERACTIVE_MODE": true` in your config to prevent stdin issues in automated environments.
+- **Check status**: Run `ccr status` to verify the server is running.
+- **Stop server**: Run `ccr stop` to stop the background server.
+
+## 🚀 Getting Started (Detailed Installation)
 
 ### 1. Installation
 
