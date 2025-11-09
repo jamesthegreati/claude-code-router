@@ -7,7 +7,9 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
-    "release": "npm run build && npm publish"
+    "release": "npm run build && npm publish",
+    "prepack": "npm run build",
+    "quickstart": "bash scripts/quickstart.sh"
   },
   "keywords": [
     "claude",
