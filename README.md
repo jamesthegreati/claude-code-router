@@ -19,7 +19,8 @@
 ## ✨ Features
 
 - **Model Routing**: Route requests to different models based on your needs (e.g., background tasks, thinking, long context).
-- **Multi-Provider Support**: Supports various model providers like OpenRouter, DeepSeek, Ollama, Gemini, Volcengine, and SiliconFlow.
+- **Multi-Provider Support**: Supports various model providers like OpenRouter, DeepSeek, Ollama, Gemini, Volcengine, SiliconFlow, and GitHub Copilot.
+- **GitHub Copilot Integration**: OAuth2 authentication with automatic token refresh for GitHub Copilot models.
 - **Request/Response Transformation**: Customize requests and responses for different providers using transformers.
 - **Dynamic Model Switching**: Switch models on-the-fly within Claude Code using the `/model` command.
 - **CLI Model Management**: Manage models and providers directly from the terminal with `ccr model`.
@@ -369,6 +370,92 @@ You can also create your own transformers and load them via the `transformers` f
   ]
 }
 ```
+
+#### GitHub Copilot Provider
+
+GitHub Copilot can be used as a provider through OAuth2 authentication. Claude Code Router supports automatic token refresh and management.
+
+**Authentication:**
+
+To authenticate with GitHub Copilot, use the interactive CLI command:
+
+```shell
+ccr auth github-copilot
+```
+
+This will:
+1. Display a device code and verification URL
+2. Open your browser to GitHub's device authorization page
+3. Wait for you to authorize the application
+4. Verify your GitHub Copilot subscription
+5. Save the authentication tokens to your config
+
+**Configuration Example:**
+
+After authentication, GitHub Copilot will be automatically added to your providers:
+
+```json
+{
+  "Providers": [
+    {
+      "name": "github-copilot",
+      "api_base_url": "https://api.githubcopilot.com/chat/completions",
+      "auth": {
+        "access_token": "gho_...",
+        "refresh_token": "ghr_...",
+        "expires_at": 1234567890000,
+        "token_type": "bearer"
+      },
+      "models": [
+        "claude-sonnet-4",
+        "claude-haiku-4",
+        "gpt-5",
+        "gpt-4o",
+        "gpt-4o-mini",
+        "o1",
+        "o1-mini",
+        "gemini-2.5-pro",
+        "gemini-2.5-flash"
+      ],
+      "transformer": {
+        "use": ["anthropic"]
+      }
+    }
+  ]
+}
+```
+
+**Available Models:**
+
+GitHub Copilot provides access to multiple model families:
+
+- **Claude models**: `claude-sonnet-4`, `claude-haiku-4`
+- **GPT models**: `gpt-5`, `gpt-4o`, `gpt-4o-mini`
+- **O1 models**: `o1`, `o1-mini`
+- **Gemini models**: `gemini-2.5-pro`, `gemini-2.5-flash`
+
+**Token Management:**
+
+- Access tokens are automatically refreshed when they expire
+- Tokens are securely stored in your config file
+- No manual token management required
+
+**Usage:**
+
+After authentication, you can use GitHub Copilot models like any other provider:
+
+```shell
+# Set as default model
+ccr model
+
+# Use directly with /model command in Claude Code
+/model github-copilot,claude-sonnet-4
+```
+
+**Requirements:**
+
+- Active GitHub Copilot subscription (Individual, Business, or Enterprise)
+- GitHub account with Copilot access
 
 #### Router
 

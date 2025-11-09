@@ -6,6 +6,7 @@ import { initConfig, initDir, cleanupLogFiles } from "./utils";
 import { createServer } from "./server";
 import { router } from "./utils/router";
 import { apiKeyAuth } from "./middleware/auth";
+import { githubCopilotAuth } from "./middleware/github-copilot-auth";
 import {
   cleanupPidFile,
   isServiceRunning,
@@ -155,6 +156,16 @@ async function run(options: RunOptions = {}) {
       };
       // Call the async auth function
       apiKeyAuth(config)(req, reply, done).catch(reject);
+    });
+  });
+  // Add GitHub Copilot OAuth authentication hook
+  server.addHook("preHandler", async (req, reply) => {
+    return new Promise((resolve, reject) => {
+      const done = (err?: Error) => {
+        if (err) reject(err);
+        else resolve();
+      };
+      githubCopilotAuth(config)(req, reply, done).catch(reject);
     });
   });
   server.addHook("preHandler", async (req, reply) => {
