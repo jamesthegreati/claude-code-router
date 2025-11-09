@@ -9,7 +9,7 @@ import {
   getServiceInfo,
 } from "./utils/processCheck";
 import { runModelSelector } from "./utils/modelSelector"; // ADD THIS LINE
-import { runGitHubCopilotAuth } from "./cli/github-copilot";
+import { runGitHubCopilotAuth, listAuthEntries } from "./cli/github-copilot";
 import { version } from "../package.json";
 import { spawn, exec } from "child_process";
 import { PID_FILE, REFERENCE_COUNT_FILE } from "./constants";
@@ -31,7 +31,8 @@ Commands:
   code          Execute claude command
   model         Interactive model selection and configuration
   auth          Authentication commands
-    github-copilot  Authenticate with GitHub Copilot
+    github-copilot  Authenticate with GitHub Copilot (OAuth or PAT)
+    list            Show stored authentication entries
   ui            Open the web UI in browser
   -v, version   Show version information
   -h, help      Show help information
@@ -41,6 +42,7 @@ Example:
   ccr code "Write a Hello World"
   ccr model
   ccr auth github-copilot
+  ccr auth list
   ccr ui
 `;
 
@@ -124,9 +126,31 @@ async function main() {
     case "auth":
       if (subCommand === "github-copilot") {
         await runGitHubCopilotAuth();
-      } else {
-        console.log("Available auth commands:");
+      } else if (subCommand === "list") {
+        await listAuthEntries();
+      } else if (!subCommand) {
+        // Show usage examples when no subcommand provided
+        console.log("\nAuthentication commands:\n");
         console.log("  ccr auth github-copilot  - Authenticate with GitHub Copilot");
+        console.log("                             Uses OAuth device flow if CCR_GITHUB_CLIENT_ID is set,");
+        console.log("                             otherwise prompts for Personal Access Token (PAT)");
+        console.log("  ccr auth list            - Show stored authentication entries\n");
+        console.log("Environment variables:");
+        console.log("  CCR_GITHUB_CLIENT_ID      - OAuth client ID for device flow");
+        console.log("  CCR_GITHUB_COPILOT_PAT    - Personal Access Token (non-interactive mode)");
+        console.log("  CCR_GITHUB_COPILOT_MODEL  - Set default model after authentication\n");
+        console.log("Examples:");
+        console.log("  # Authenticate with PAT (no client ID)");
+        console.log("  ccr auth github-copilot\n");
+        console.log("  # Authenticate with OAuth device flow");
+        console.log("  CCR_GITHUB_CLIENT_ID=your_client_id ccr auth github-copilot\n");
+        console.log("  # List stored authentication");
+        console.log("  ccr auth list\n");
+      } else {
+        console.log("Unknown auth command:", subCommand);
+        console.log("\nAvailable auth commands:");
+        console.log("  ccr auth github-copilot  - Authenticate with GitHub Copilot");
+        console.log("  ccr auth list            - Show stored authentication entries");
         process.exit(1);
       }
       break;
