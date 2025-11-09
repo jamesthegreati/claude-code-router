@@ -93,8 +93,22 @@ export function normalizeModelName(model: string): string {
  * Check if a provider is a GitHub Copilot provider
  */
 export function isGitHubCopilotProvider(provider: any): boolean {
-  return provider.name === 'github-copilot' || 
-         provider.api_base_url?.includes('api.githubcopilot.com');
+  if (provider.name === 'github-copilot') {
+    return true;
+  }
+  
+  // Validate that the URL is actually a GitHub Copilot API URL
+  if (provider.api_base_url) {
+    try {
+      const url = new URL(provider.api_base_url);
+      // Check that the hostname is exactly api.githubcopilot.com
+      return url.hostname === 'api.githubcopilot.com';
+    } catch {
+      return false;
+    }
+  }
+  
+  return false;
 }
 
 /**
