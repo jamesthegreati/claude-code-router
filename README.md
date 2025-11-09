@@ -78,7 +78,35 @@ bunx --bun github:jamesthegreati/claude-code-router ccr start
    ```bash
    ccr auth github-copilot
    ```
-   This will guide you through the OAuth2 device flow to connect your GitHub account.
+   
+   **Authentication Methods:**
+   
+   - **Personal Access Token (PAT)** - Default when no OAuth client ID is set:
+     - Follow the prompts to enter your GitHub PAT
+     - The PAT must have the following scopes: `copilot`, `read:user`
+     - [Create a PAT here](https://github.com/settings/tokens/new)
+     - ⚠️ Tokens are stored in plain text in `~/.claude-code-router/config.json` - keep it secure
+   
+   - **OAuth Device Flow** - When CCR_GITHUB_CLIENT_ID environment variable is set:
+     - Follow the on-screen instructions to authorize via GitHub's device flow
+     - Tokens are automatically refreshed when they expire
+   
+   **Non-Interactive Mode:**
+   ```bash
+   # Using PAT
+   CCR_GITHUB_COPILOT_PAT=ghp_your_token NON_INTERACTIVE_MODE=true ccr auth github-copilot
+   
+   # Using OAuth with client ID
+   CCR_GITHUB_CLIENT_ID=your_client_id ccr auth github-copilot
+   
+   # Set default model automatically
+   CCR_GITHUB_COPILOT_MODEL=claude-sonnet-4 ccr auth github-copilot
+   ```
+   
+   **View stored authentication:**
+   ```bash
+   ccr auth list
+   ```
 
 2. **Select your model**:
    ```bash
