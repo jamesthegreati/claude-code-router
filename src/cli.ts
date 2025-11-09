@@ -9,6 +9,7 @@ import {
   getServiceInfo,
 } from "./utils/processCheck";
 import { runModelSelector } from "./utils/modelSelector"; // ADD THIS LINE
+import { runGitHubCopilotAuth } from "./cli/github-copilot";
 import { version } from "../package.json";
 import { spawn, exec } from "child_process";
 import { PID_FILE, REFERENCE_COUNT_FILE } from "./constants";
@@ -16,6 +17,7 @@ import fs, { existsSync, readFileSync } from "fs";
 import { join } from "path";
 
 const command = process.argv[2];
+const subCommand = process.argv[3];
 
 const HELP_TEXT = `
 Usage: ccr [command]
@@ -28,6 +30,8 @@ Commands:
   statusline    Integrated statusline
   code          Execute claude command
   model         Interactive model selection and configuration
+  auth          Authentication commands
+    github-copilot  Authenticate with GitHub Copilot
   ui            Open the web UI in browser
   -v, version   Show version information
   -h, help      Show help information
@@ -36,6 +40,7 @@ Example:
   ccr start
   ccr code "Write a Hello World"
   ccr model
+  ccr auth github-copilot
   ccr ui
 `;
 
@@ -115,6 +120,15 @@ async function main() {
     // ADD THIS CASE
     case "model":
       await runModelSelector();
+      break;
+    case "auth":
+      if (subCommand === "github-copilot") {
+        await runGitHubCopilotAuth();
+      } else {
+        console.log("Available auth commands:");
+        console.log("  ccr auth github-copilot  - Authenticate with GitHub Copilot");
+        process.exit(1);
+      }
       break;
     case "code":
       if (!isRunning) {
