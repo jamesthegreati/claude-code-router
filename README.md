@@ -38,9 +38,15 @@ Get Claude Code Router up and running in seconds with GitHub Copilot support!
 curl -fsSL https://raw.githubusercontent.com/jamesthegreati/claude-code-router/github-copilot-provider/scripts/quickstart.sh | bash
 ```
 
-**Windows PowerShell:**
+**Windows (Git Bash / WSL):**
+```bash
+curl -fsSL https://raw.githubusercontent.com/jamesthegreati/claude-code-router/github-copilot-provider/scripts/quickstart.sh | bash
+```
+
+**Windows (PowerShell - Alternative):**
 ```powershell
-irm https://raw.githubusercontent.com/jamesthegreati/claude-code-router/github-copilot-provider/scripts/quickstart.sh | iex
+# Use npx directly instead
+npx -y -p github:jamesthegreati/claude-code-router#github-copilot-provider ccr start
 ```
 
 This script will:
